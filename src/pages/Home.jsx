@@ -6,29 +6,32 @@ import Moviecard from '../components/Moviecard'
 
 
 const Home = () => {
-  // const movies = [
-  //   {
-  //     id: 1,
-  //     title: "Intersteller",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     ratiing: 8.7,
-  //     year: 2014,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Intersteller",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     ratiing: 9.7,
-  //     year: 2017,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Intersteller",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     ratiing: 8.9,
-  //     year: 2010,
-  //   },
-  // ]
+  const movies = [
+    {
+      id: 1,
+      title: "Intersteller Night",
+      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      rating: 8.7,
+      year: 2014,
+      genre: "Sci-Fi . Adventure . Drama",
+    },
+    {
+      id: 2,
+      title: "Avengers",
+      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      rating: 9.7,
+      year: 2017,
+      genre: "Sci-Fi . Horror . Drama",
+    },
+    {
+      id: 3,
+      title: "Vikings",
+      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      rating: 8.9,
+      year: 2010,
+      genre: "Sci-Fi . historical . Drama",
+    },
+  ]
   return (
     <main>
       <section className='relative overflow-hidden bg-slate-950 px-4 py-20 sm:px-6 lg:px-8'>
@@ -51,9 +54,15 @@ const Home = () => {
           <p className='text-slate-400 text-center my-4'>Explore popular movies and discover something new.</p>
 
           <div className='mt-8 grid  grid-cols-1 gap-6 lg:grid-cols-3'>
-            <Moviecard />
-            <Moviecard />
-            <Moviecard />
+            {movies.length > 0 ? (
+              movies.map((movie)=>(
+                <Moviecard key={movie.id} movie={movie} />
+              ))
+            ) : (
+              <p className='col-span-full text-5xl font-bold py-10 text-center text-slate-400'>No movies found</p>
+            )
+            }
+            
 
             {/* {movies.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
