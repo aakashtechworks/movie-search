@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBar from '../components/SearchBar'
 import Moviecard from '../components/Moviecard'
 
@@ -6,32 +6,61 @@ import Moviecard from '../components/Moviecard'
 
 
 const Home = () => {
-  const movies = [
-    {
-      id: 1,
-      title: "Intersteller Night",
-      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      rating: 8.7,
-      year: 2014,
-      genre: "Sci-Fi . Adventure . Drama",
-    },
-    {
-      id: 2,
-      title: "Avengers",
-      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      rating: 9.7,
-      year: 2017,
-      genre: "Sci-Fi . Horror . Drama",
-    },
-    {
-      id: 3,
-      title: "Vikings",
-      poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      rating: 8.9,
-      year: 2010,
-      genre: "Sci-Fi . historical . Drama",
-    },
-  ]
+
+  const [movies, setMovies] = useState([])
+  const [genres, setGenres] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, seteError] = useState("")
+
+
+  // const movies = [
+  //   {
+  //     id: 1,
+  //     title: "Intersteller Night",
+  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //     rating: 8.7,
+  //     year: 2014,
+  //     genre: "Sci-Fi . Adventure . Drama",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Avengers",
+  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //     rating: 9.7,
+  //     year: 2017,
+  //     genre: "Sci-Fi . Horror . Drama",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Vikings",
+  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //     rating: 8.9,
+  //     year: 2010,
+  //     genre: "Sci-Fi . historical . Drama",
+  //   },
+  // ]
+
+  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+
+  const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`
+
+  useEffect(()=>{
+     fetch(apiUrl).then((Response) => Response.json()).then((data) => {setMovies(data.results); setLoading(false)})
+     .catch((err)=> {console.log(err); seteError("Failed to load Movies"); setLoading(false);})
+  }, [])
+
+  useEffect(()=>{
+    fetch(
+      `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`
+    ).then((Response)=> Response.json()).then((data)=>{setGenres(data.genres)})
+
+  }, [])
+
+
+  
+
+  console.log()
+
   return (
     <main>
       <section className='relative overflow-hidden bg-slate-950 px-4 py-20 sm:px-6 lg:px-8'>
@@ -54,19 +83,21 @@ const Home = () => {
           <p className='text-slate-400 text-center my-4'>Explore popular movies and discover something new.</p>
 
           <div className='mt-8 grid  grid-cols-1 gap-6 lg:grid-cols-3'>
-            {movies.length > 0 ? (
-              movies.map((movie)=>(
-                <Moviecard key={movie.id} movie={movie} />
+            {error ? (
+              <div className='flex items-center justify-center fixed inset-0 mt-12 mb-48 lg:mb-0'>
+                <p className='text-3xl lg:text-7xl font-bold text-white'>{error}</p>
+              </div>
+            ) :  loading ? (
+              <div className='flex items-center justify-center fixed inset-0 mt-12 mb-48 lg:mb-0'>
+                 <p className='text-3xl lg:text-7xl font-bold text-white'>Loading Movies...</p>
+              </div>
+                
+              ) : (
+                movies.map((movie)=>(
+                <Moviecard key={movie.id} movie={movie} genres={genres}/>
               ))
-            ) : (
-              <p className='col-span-full text-5xl font-bold py-10 text-center text-slate-400'>No movies found</p>
-            )
-            }
-            
-
-            {/* {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))} */}
+              )
+          }
           </div>
         </div>
       </section>
