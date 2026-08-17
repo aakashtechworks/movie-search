@@ -11,34 +11,11 @@ const Home = () => {
   const [genres, setGenres] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, seteError] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchLoading, setSearchLoading] = useState(false)
 
-
-  // const movies = [
-  //   {
-  //     id: 1,
-  //     title: "Intersteller Night",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     rating: 8.7,
-  //     year: 2014,
-  //     genre: "Sci-Fi . Adventure . Drama",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Avengers",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     rating: 9.7,
-  //     year: 2017,
-  //     genre: "Sci-Fi . Horror . Drama",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Vikings",
-  //     poster: "https://plus.unsplash.com/premium_photo-1710409625244-e9ed7e98f67b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     rating: 8.9,
-  //     year: 2010,
-  //     genre: "Sci-Fi . historical . Drama",
-  //   },
-  // ]
+  
 
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -56,10 +33,35 @@ const Home = () => {
 
   }, [])
 
+  useEffect(()=> {
+    if(!searchTerm) return
 
-  
+    const searchMovies = async () => {
+      try{
+        setSearchLoading(true)
+        seteError("")
 
-  console.log()
+      const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(searchTerm)}`
+      
+      const response = await fetch(searchUrl)
+
+      if(!response.ok){
+        throw new Error("Failed to search movies");
+      }
+
+      const data = await response.json();
+      
+      setMovies(data.results);
+
+      } catch(err){
+      seteError("Failed to search movies");
+    } finally {
+      setSearchLoading(false);
+    }
+    }
+    searchMovies()
+  }, [searchTerm])
+
 
   return (
     <main>
@@ -71,7 +73,8 @@ const Home = () => {
 
            <p className='mx-auto mt-6 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg'>Search thousands of movies and find something you'll love. Discover popular films, hidden gems and your next favourite movie.</p>
 
-           <SearchBar />
+           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} setSearchTerm={setSearchTerm}/>
+           
          </div>
         {/* search bar */}
       </section>
@@ -83,6 +86,12 @@ const Home = () => {
           <p className='text-slate-400 text-center my-4'>Explore popular movies and discover something new.</p>
 
           <div className='mt-8 grid  grid-cols-1 gap-6 lg:grid-cols-3'>
+
+            {
+              searchLoading && (
+                <p className='text-white text-center py-10'>Searching Movies...</p>
+              )
+            }
             {error ? (
               <div className='flex items-center justify-center fixed inset-0 mt-12 mb-48 lg:mb-0'>
                 <p className='text-3xl lg:text-7xl font-bold text-white'>{error}</p>
