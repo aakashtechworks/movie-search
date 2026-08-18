@@ -39,7 +39,8 @@ const Home = () => {
     const searchMovies = async () => {
       try{
         setSearchLoading(true)
-        seteError("")
+        setMovies([]);
+        // setError("")
 
       const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(searchTerm)}`
       
@@ -57,11 +58,11 @@ const Home = () => {
       seteError("Failed to search movies");
     } finally {
       setSearchLoading(false);
+      
     }
     }
     searchMovies()
   }, [searchTerm])
-
 
   return (
     <main>
@@ -81,23 +82,40 @@ const Home = () => {
 
       <section className='bg-slate-950 px-4 py-16 sm:px-6 lg:px-8'>
         <div className='mx-auto max-w-7xl'>
-          <h2 className='text-2xl sm:text-3xl font-bold text-white text-center'>Popular Movies</h2>
+          <h2 className='text-2xl sm:text-3xl font-bold text-white text-center'>{searchTerm ? `Search Results for "${searchTerm}"` : "Popular Movies"}</h2>
 
           <p className='text-slate-400 text-center my-4'>Explore popular movies and discover something new.</p>
 
-          <div className='mt-8 grid  grid-cols-1 gap-6 lg:grid-cols-3'>
+          
 
-            {
-              searchLoading && (
-                <p className='text-white text-center py-10'>Searching Movies...</p>
+          <div className='mt-8 grid  grid-cols-1 gap-6 lg:grid-cols-3'>
+            {searchLoading ? (
+              <div className='col-span-full flex items-center justify-center mt-12 mb-48 lg:mb-0'>
+                 <p className='text-3xl lg:text-7xl font-bold text-white'>Searching Movies...</p>
+              </div>
+            ) : loading ? (
+              <div className='col-span-full flex items-center justify-center mt-12 mb-48 lg:mb-0'>
+                 <p className='text-3xl lg:text-7xl font-bold text-white'>Loading Movies...</p>
+              </div>
+            ) : error ? (
+              <div className='col-span-full flex items-center justify-center mt-12 mb-48 lg:mb-0'>
+                <p className='text-3xl lg:text-7xl font-bold text-white'>{error}</p>
+              </div>
+            ) : (
+                movies.map((movie)=>(
+                <Moviecard key={movie.id} movie={movie} genres={genres}/>
+              ))
               )
             }
-            {error ? (
-              <div className='flex items-center justify-center fixed inset-0 mt-12 mb-48 lg:mb-0'>
+
+
+
+            {/* {error ? (
+              <div className='col-span-full flex items-center justify-center mt-12 mb-48 lg:mb-0'>
                 <p className='text-3xl lg:text-7xl font-bold text-white'>{error}</p>
               </div>
             ) :  loading ? (
-              <div className='flex items-center justify-center fixed inset-0 mt-12 mb-48 lg:mb-0'>
+              <div className='col-span-full flex items-center justify-center mt-12 mb-48 lg:mb-0'>
                  <p className='text-3xl lg:text-7xl font-bold text-white'>Loading Movies...</p>
               </div>
                 
@@ -106,7 +124,7 @@ const Home = () => {
                 <Moviecard key={movie.id} movie={movie} genres={genres}/>
               ))
               )
-          }
+          } */}
           </div>
         </div>
       </section>
