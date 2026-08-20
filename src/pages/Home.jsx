@@ -18,6 +18,7 @@ const Home = () => {
   const [searchPage, setSearchPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [paginationLoading, setPaginationLoading] = useState(false)
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   
 
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
@@ -39,7 +40,12 @@ const Home = () => {
   }, [])
 
   useEffect(()=> {
-    if(!searchTerm) return
+    if(!debouncedSearch.trim()) {
+      setMovies([]);
+      return;
+    }
+      
+    
 
     const searchMovies = async () => {
       try{
@@ -47,7 +53,7 @@ const Home = () => {
         setMovies([]);
         // setError("")
 
-      const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(searchTerm)}&page=${searchTerm ? searchPage : page}`
+      const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(debouncedSearch)}&page=${searchTerm ? searchPage : page}`
       
       const response = await fetch(searchUrl)
 
@@ -67,7 +73,17 @@ const Home = () => {
     }
     }
     searchMovies()
-  }, [searchTerm])
+  }, [debouncedSearch])
+
+  useEffect(()=>{
+    const timer = setTimeout(()=>{
+      setDebouncedSearch(searchQuery)
+    }, 500);
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [searchQuery])
+
 
   return (
     <main>
