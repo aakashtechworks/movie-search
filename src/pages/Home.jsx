@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../components/SearchBar'
 import Moviecard from '../components/Moviecard'
 
-
+// test it
 
 
 const Home = () => {
