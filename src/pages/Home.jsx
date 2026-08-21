@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../components/SearchBar'
 import Moviecard from '../components/Moviecard'
 
-// test it
+
 
 
 const Home = () => {
@@ -41,7 +41,8 @@ const Home = () => {
 
   useEffect(()=> {
     if(!debouncedSearch.trim()) {
-      setMovies([]);
+      // setPage(1)
+      // setMovies([]);
       return;
     }
       
