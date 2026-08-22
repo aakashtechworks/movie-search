@@ -6,6 +6,7 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [cast, setCast] = useState([])
 
   useEffect(()=>{
     const fetchMovieDetails = async () => {
@@ -27,6 +28,24 @@ const MovieDetails = () => {
       }
     }
     fetchMovieDetails()
+  }, [id])
+
+  useEffect(()=>{
+    const fetchCast = async() => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+        )
+        if(!response.ok) {
+          throw new Error("Failed to fetch cast")
+        }
+        const data = await response.json()
+        setCast(data.cast)
+      } catch(error){
+        console.log(error)
+      }
+    }
+    fetchCast()
   }, [id])
 
   if(loading) return <p className='flex text-slate-950 items-center justify-center my-44 font-bold text-3xl lg:text-5xl'>Loading movie...</p>
@@ -51,7 +70,7 @@ const MovieDetails = () => {
           <div className='max-w-4xl '>
             <div className='mb-4 flex flex-wrap gap-2'>
               {movie?.genres?.map((genre) => (
-                <span className='rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-md'>
+                <span key={genre.id} className='rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-md'>
                   {genre.name}
                 </span>))}
             </div>
@@ -73,6 +92,7 @@ const MovieDetails = () => {
                 <h2 className='mb-3 text-xl font-bold'>Overview</h2>
                 <p className='max-w-3xl text-sm leading-7 text-white/65 sm:text-base'>{movie?.overview || "No overview available."}</p>
               </div>
+
               <div className='mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4'>
                 <div className='rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-md'>
                   <p className='text-xs text-white/40'>Status</p>
@@ -98,6 +118,26 @@ const MovieDetails = () => {
               <a href={movie.homepage} target='_blank' rel='noreferrer' className='mt-8 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-950 transition hover:-translate-y-1 hover:bg-white/90'>Official Website</a>
               )}
           </div>
+        </div>
+      </div>
+    </section>
+    <section className='mt-12'>
+      <h2 className='mb-5 text-2xl font-bold text-center'>
+        Top Cast
+      </h2>
+      <div className='flex items-center justify-center pb-4'>
+        <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-items-center-center'>
+          {cast.slice(0, 10).map((actor)=> (
+          <div key={actor.id} className='min-w-[130px] overflow-hidden rounded-xl border border-white/10 bg-white/5'>
+            {actor.profile_path ? (
+              <img src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`} alt={actor.name} className='h-44 w-full object-cover'/>
+            ) : (<div className='flex h-44 items-center justify-center bg-white/10 text-xs text-white/40'>No Image</div> )}
+            <div className='p-3'>
+              <p className='truncate text-sm font-semibold'>{actor.name}</p>
+              <p className='mt-1 truncate text-xs text-white/50'>{actor.character}</p>
+            </div>
+          </div>
+        ))}
         </div>
       </div>
     </section>
