@@ -1,7 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Moviecard = ({movie, genres}) => {
   return (
+    <Link to={`/movie/${movie.id}`}>
     <article className='group overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl'>
        <div className='relative overflow-hidden'>
         <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className='h-72 w-full object-cover transition duration-500 group-hover:scale-105'/>
@@ -17,6 +19,7 @@ const Moviecard = ({movie, genres}) => {
         <button type='button' className='mt-4 w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 font-semibold text-white transition duration-300 hover:scale-[1.02] hover:shadow-lg'>View Details</button>
        </div>
     </article>
+    </Link>
   )
 }
 
