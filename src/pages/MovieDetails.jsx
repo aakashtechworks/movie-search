@@ -2,11 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const MovieDetails = () => {
+
+  useEffect (() =>{
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    })
+  }, [])
+  
   const{id} = useParams()
   const [movie, setMovie] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [cast, setCast] = useState([])
+  const [videos, setVideos] = useState([])
+
+
 
   useEffect(()=>{
     const fetchMovieDetails = async () => {
@@ -47,6 +58,25 @@ const MovieDetails = () => {
     }
     fetchCast()
   }, [id])
+
+  useEffect(()=>{
+    const fetchVideos = async() => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+        )
+        if(!response.ok) {
+          throw new Error("Failed to fetch videos")
+        }
+        const data = await response.json()
+        setVideos(data.results)
+      } catch(error){
+        console.log(error)
+      }
+    }
+    fetchVideos()
+  }, [id])
+
 
   if(loading) return <p className='flex text-slate-950 items-center justify-center my-44 font-bold text-3xl lg:text-5xl'>Loading movie...</p>
   if(error) return <p className='flex text-slate-950 items-center justify-center my-44 font-bold text-3xl lg:text-5xl'>{error}</p>
@@ -140,6 +170,22 @@ const MovieDetails = () => {
         ))}
         </div>
       </div>
+    </section>
+    <section className=' mt-12 pb-8'>
+      <h2 className='mb-5 text-2xl font-bold text-center'>Trailer</h2>
+      {videos.filter(
+        (video) => video.site === "YouTube" && video.type === "Trailer"
+      ).length > 0 ? (
+        <div className='mx-auto w-[85%] overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-black/40 '>
+          <div className='aspect-video w-full'>
+            <iframe className='block h-full w-full touch-auto' src={`https://www.youtube.com/embed/${
+            videos.filter(
+              (video)=> video.site === "YouTube" && video.type === "Trailer"
+            )[0].key
+            }?playsline=1&rel=0`} title='Movie Trailer' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowFullScreen/>
+          </div>
+        </div>
+      ) : ( <p className='text-white/50'>Trailer not available</p> )}
     </section>
     </main>
   )
