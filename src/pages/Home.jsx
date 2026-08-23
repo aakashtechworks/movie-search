@@ -66,6 +66,22 @@ const Home = () => {
       
       setMovies(data.results);
 
+      const oldHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]")
+
+      const newMovies = data.results.slice(0, 10).map((movie)=>({
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+        vote_average: movie.vote_average,
+      }))
+
+      const updatedHistory = [
+        ...newMovies, ...oldHistory.filter((oldMovie) => !newMovies.some((newMovie) => newMovie.id === oldMovie.id)),
+      ].slice(0, 20)
+
+      localStorage.setItem("searchHistory", JSON.stringify(updatedHistory))
+
+
       } catch(err){
       seteError("Failed to search movies");
     } finally {

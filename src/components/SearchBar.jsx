@@ -7,6 +7,25 @@ const SearchBar = ({searchQuery, setSearchQuery, setSearchTerm, setPage, setSear
     setSearchPage(1);
     // setPage(1)
 
+
+
+
+
+
+    // const query = searchQuery.trim()
+    // const oldHistory = JSON.parse(
+    //   localStorage.getItem("searchHistory") || "[]"
+    // )
+
+    // const updatedHistory = [
+    //     ...newMovies, ...oldHistory.filter((oldMovie) => !newMovies.some((newMovie) => newMovie.id === oldMovie.id)),
+    //   ].slice(0, 20)
+
+    //  localStorage.setItem("searchHistory", JSON.stringify(updatedHistory))
+
+
+
+
   }
   return (
     <div className='mx-auto mt-8 flex max-w-2xl flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-2 shadow-2xl backdrop-blur-xl sm:flex-row'>

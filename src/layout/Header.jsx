@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
   return (
-    <header className='sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-md'>
+    <header className='sticky top-0 z-50 border-b border-white/10 bg-slate-950 backdrop-blur-md'>
         <nav className='flex items-center justify-between max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8'>
             <h1 className='text-2xl font-bold text-white'>movieHub</h1>
 
