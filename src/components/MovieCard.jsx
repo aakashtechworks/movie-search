@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Moviecard = ({movie, genres}) => {
+const MovieCard = ({movie, genres}) => {
   return (
     <Link to={`/movie/${movie.id}`}>
     <article className='group overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl'>
@@ -23,4 +23,4 @@ const Moviecard = ({movie, genres}) => {
   )
 }
 
-export default Moviecard
+export default MovieCard

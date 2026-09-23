@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SearchBar from '../components/SearchBar'
-import Moviecard from '../components/Moviecard'
+import MovieCard from '../components/MovieCard'
+
 
 
 
@@ -145,7 +146,7 @@ const Home = () => {
               </div>
             ) : (
               movies.map((movie)=>(
-                <Moviecard key={movie.id} movie={movie} genres={genres}/>
+                <MovieCard key={movie.id} movie={movie} genres={genres}/>
               ))
               )
             }
